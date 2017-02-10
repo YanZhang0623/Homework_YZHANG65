@@ -1,0 +1,106 @@
+---
+title: "R Notebook"
+output: html_notebook
+
+fileURL <- "https://ed-public-download.apps.cloud.gov/downloads/Most-Recent-Cohorts-Scorecard-Elements.csv"
+download.file(fileURL,destfile = "CollegeData.csv",method = "auto")
+list.files(".")
+CollegeScorecard <- read.csv("CollegeData.csv",na.strings = c("NULL","PrivacySuppressed"))
+library(dplyr)
+CS <- tbl_df(CollegeScorecard)
+attach(CS)
+CS<-CS[,-c(1:9)] # delete the variables that are not relate to the GRAD_DEBT_MDN_SUPP
+CS<-CS[,-c(4:12)]
+CS<-CS[,-c(5:25)]
+CS<-CS[,-6]
+CS<-CS[,-c(6:44)]
+CS<-CS[,-c(7:15)]
+CS<-CS[,-8]
+CS<-CS[,-33]
+CS<-CS[,-32]
+median(CS$PREDDEG,na.rm = TRUE) #Calculate mean with median value for each column without NA
+median(CS$CONTROL,na.rm = TRUE)
+median(CS$LOCALE,na.rm = TRUE)
+median(CS$RELAFFIL,na.rm = TRUE)
+median(CS$SAT_AVG,na.rm = TRUE)
+median(CS$UGDS,na.rm = TRUE)
+median(CS$PPTUG_EF,na.rm = TRUE)
+median(CS$NPT4_PUB,na.rm = TRUE)
+median(CS$NPT4_PRIV,na.rm = TRUE)
+median(CS$NPT41_PUB,na.rm = TRUE)
+median(CS$NPT42_PUB,na.rm = TRUE)
+median(CS$NPT43_PUB,na.rm = TRUE)
+median(CS$NPT44_PUB,na.rm = TRUE)
+median(CS$NPT45_PUB,na.rm = TRUE)
+median(CS$NPT41_PRIV,na.rm = TRUE)
+median(CS$NPT42_PRIV,na.rm = TRUE)
+median(CS$NPT43_PRIV,na.rm = TRUE)
+median(CS$NPT44_PRIV,na.rm = TRUE)
+median(CS$NPT45_PRIV,na.rm = TRUE)
+median(CS$PCTPELL,na.rm = TRUE)
+median(CS$RET_FT4,na.rm = TRUE)
+median(CS$RET_FTL4,na.rm = TRUE)
+median(CS$RET_PT4,na.rm = TRUE)
+median(CS$RET_PTL4,na.rm = TRUE)
+median(CS$PCTFLOAN,na.rm = TRUE)
+median(CS$UG25ABV,na.rm = TRUE)
+median(CS$MD_EARN_WNE_P10,na.rm = TRUE)
+median(CS$GT_25K_P6,na.rm = TRUE)
+median(CS$GRAD_DEBT_MDN_SUPP,na.rm = TRUE)
+median(CS$GRAD_DEBT_MDN10YR_SUPP,na.rm = TRUE)
+median(CS$RPY_3YR_RT_SUPP,na.rm = TRUE)
+CS$PREDDEG[which(is.na(CS$PREDDEG))]<-2 #replace NA with the median value
+CS$CONTROL[which(is.na(CS$CONTROL))]<-2
+CS$LOCALE[which(is.na(CS$LOCALE))]<-21
+CS$RELAFFIL[which(is.na(CS$RELAFFIL))]<--2
+CS$SAT_AVG[which(is.na(CS$SAT_AVG))]<-1039.5
+CS$UGDS[which(is.na(CS$UGDS))]<-406
+CS$PPTUG_EF[which(is.na(CS$PPTUG_EF))]<-0.1489
+CS$NPT4_PUB[which(is.na(CS$NPT4_PUB))]<-8751
+CS$NPT4_PRIV[which(is.na(CS$NPT4_PRIV))]<-18254.5
+CS$NPT41_PUB[which(is.na(CS$NPT41_PUB))]<-7526
+CS$NPT42_PUB[which(is.na(CS$NPT42_PUB))]<-8291.5
+CS$NPT43_PUB[which(is.na(CS$NPT43_PUB))]<-10476
+CS$NPT44_PUB[which(is.na(CS$NPT44_PUB))]<-12710
+CS$NPT45_PUB[which(is.na(CS$NPT45_PUB))]<-13590
+CS$NPT41_PRIV[which(is.na(CS$NPT41_PRIV))]<-16662
+CS$NPT42_PRIV[which(is.na(CS$NPT42_PRIV))]<-17624
+CS$NPT43_PRIV[which(is.na(CS$NPT43_PRIV))]<-19674.5
+CS$NPT44_PRIV[which(is.na(CS$NPT44_PRIV))]<-22507.5
+CS$NPT45_PRIV[which(is.na(CS$NPT45_PRIV))]<-24172
+CS$PCTPELL[which(is.na(CS$PCTPELL))]<-0.5233
+CS$RET_FT4[which(is.na(CS$RET_FT4))]<-0.7414
+CS$RET_FTL4[which(is.na(CS$RET_FTL4))]<-0.6906
+CS$RET_PT4[which(is.na(CS$RET_PT4))]<-0.45
+CS$RET_PTL4[which(is.na(CS$RET_PTL4))]<-0.50325
+CS$PCTFLOAN[which(is.na(CS$PCTFLOAN))]<-0.5849
+CS$UG25ABV[which(is.na(CS$UG25ABV))]<-0.40375
+CS$MD_EARN_WNE_P10[which(is.na(CS$MD_EARN_WNE_P10))]<-30600
+CS$GT_25K_P6[which(is.na(CS$GT_25K_P6))]<-0.5015
+CS$GRAD_DEBT_MDN_SUPP[which(is.na(CS$GRAD_DEBT_MDN_SUPP))]<-14498.5
+CS$GRAD_DEBT_MDN10YR_SUPP[which(is.na(CS$GRAD_DEBT_MDN10YR_SUPP))]<-148.7968
+CS$RPY_3YR_RT_SUPP[which(is.na(CS$RPY_3YR_RT_SUPP))]<-0.3836317
+cor(CS)   #find the correlation between each variables
+fit1<-lm(CS$GRAD_DEBT_MDN_SUPP~CS$PREDDEG,data=CS)  #build the first model based on the high correlation
+summary(fit1)
+fit2<-lm(CS$GRAD_DEBT_MDN_SUPP~CS$PREDDEG+CS$CONTROL+CS$LOCALE+CS$RELAFFIL+CS$SAT_AVG+CS$UGDS+CS$PPTUG_EF+CS$NPT4_PUB+CS$NPT4_PRIV
+         +CS$NPT41_PUB+CS$NPT42_PUB+CS$NPT43_PUB+CS$NPT44_PUB+CS$NPT45_PUB+CS$NPT41_PRIV+CS$NPT42_PRIV+CS$NPT43_PRIV
+         +CS$NPT44_PRIV+CS$NPT45_PRIV+CS$PCTPELL+CS$RET_FT4+CS$RET_FTL4+CS$RET_PT4+CS$RET_PTL4+CS$PCTFLOAN+CS$UG25ABV
+         +CS$MD_EARN_WNE_P10+CS$GT_25K_P6+CS$GRAD_DEBT_MDN10YR_SUPP+CS$RPY_3YR_RT_SUPP,data=CS)  #build the second model with all variables
+step <- stepAIC(fit2, direction="both")
+step$anova
+library(gvlma)
+gvmodel <- gvlma(fit2) 
+summary(gvmodel)---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file).
